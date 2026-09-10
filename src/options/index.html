@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GitHub Private Star settings</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="mark" aria-hidden="true">★</div>
+        <div>
+          <h1>GitHub Private Star</h1>
+          <p>Store private stars in a private GitHub repository you control.</p>
+        </div>
+      </header>
+
+      <form id="settings-form">
+        <label for="token">Fine-grained personal access token</label>
+        <input id="token" name="token" type="password" autocomplete="off" required />
+        <p class="help">The token stays in Chrome extension storage and is only available to trusted extension pages.</p>
+
+        <div class="grid">
+          <div>
+            <label for="storage-owner">Repository owner</label>
+            <input id="storage-owner" name="storageOwner" type="text" required />
+          </div>
+          <div>
+            <label for="storage-repo">Repository name</label>
+            <input id="storage-repo" name="storageRepo" type="text" required />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="primary" type="submit">Save</button>
+          <button id="test-connection" type="button">Test connection</button>
+        </div>
+        <div id="status" role="status" aria-live="polite"></div>
+      </form>
+
+      <section>
+        <h2>Required token access</h2>
+        <p>Select only your private storage repository and grant <strong>Contents: Read and write</strong>.</p>
+      </section>
+    </main>
+    <script src="options.js"></script>
+  </body>
+</html>

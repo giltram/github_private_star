@@ -1,0 +1,16 @@
+{
+  "name": "github-private-star",
+  "version": "0.2.8",
+  "private": true,
+  "description": "Private GitHub repository bookmarks stored in your own private repository.",
+  "scripts": {
+    "dev": "node scripts/build.mjs --watch",
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.328",
+    "esbuild": "^0.25.9",
+    "typescript": "^5.9.2"
+  }
+}
