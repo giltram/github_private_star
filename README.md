@@ -37,10 +37,15 @@ Private Stars are shown only when the extension is installed and you are signed 
 
 ```bash
 npm run typecheck
+npm test
 npm run dev
 ```
 
 After rebuilding, reload the extension from `chrome://extensions` and refresh GitHub.
+
+See [docs/architecture.md](docs/architecture.md) for module boundaries and the
+repository button lifecycle. Tests use mocked extension messages and never write
+to your GitHub storage repository.
 
 ## Privacy
 

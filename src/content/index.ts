@@ -16,6 +16,7 @@ const RESERVED_TOP_LEVEL_ROUTES = new Set([
 ]);
 
 let activeUrl = "";
+let activeRepository: RepoIdentifier | null = null;
 let routeGeneration = 0;
 let mountObserver: MutationObserver | null = null;
 let mountTimeout: number | null = null;
@@ -30,7 +31,12 @@ for (const eventName of ["popstate", "hashchange", "turbo:load", "pjax:end"]) {
 window.setInterval(checkRoute, ROUTE_CHECK_INTERVAL_MS);
 
 function checkRoute(): void {
-  if (location.href === activeUrl) return;
+  if (location.href === activeUrl) {
+    // GitHub can replace its React repository header without changing the URL.
+    // Reconcile on the existing interval so removed or late headers recover too.
+    if (activeRepository) tryMount(activeRepository, routeGeneration);
+    return;
+  }
   activeUrl = location.href;
   routeGeneration += 1;
   stopMountObserver();
@@ -38,8 +44,8 @@ function checkRoute(): void {
   document.getElementById(TOAST_ID)?.remove();
   void syncProfileUi();
 
-  const repo = parseRepositoryUrl(location.href);
-  if (repo) mountWhenReady(repo, routeGeneration);
+  activeRepository = parseRepositoryUrl(location.href);
+  if (activeRepository) mountWhenReady(activeRepository, routeGeneration);
 }
 
 function parseRepositoryUrl(value: string): RepoIdentifier | null {
@@ -107,6 +113,13 @@ interface Placement {
 }
 
 function findPlacement(repo: RepoIdentifier): Placement | null {
+  // The React repository header owns this list independently of the native
+  // Star button (which can be absent or have a different test ID when starred).
+  const headerActions = document.querySelector('[data-testid="repo-header-actions"]');
+  if (headerActions) {
+    return { container: headerActions, insertAfter: false, listItem: headerActions.tagName === "UL" };
+  }
+
   const starForm = document.querySelector(
     `form[action="/${repo.owner}/${repo.name}/star"], form[action="/${repo.owner}/${repo.name}/unstar"]`
   );

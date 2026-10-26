@@ -90,7 +90,7 @@ async function syncUserMenu(knownViewer?: string): Promise<void> {
   link.setAttribute("aria-label", "Private stars");
   replaceMenuIconWithLock(link);
   replaceMenuLabel(link);
-  link.addEventListener("click", navigateInsideGitHub);
+  link.addEventListener("click", navigateFromUserMenu);
 
   const originalItem = starsLink.closest("li");
   if (originalItem?.parentElement) {
@@ -543,6 +543,15 @@ function navigateInsideGitHub(event: MouseEvent): void {
   event.preventDefault();
   history.pushState({}, "", link.href);
   window.dispatchEvent(new PopStateEvent("popstate"));
+}
+
+function navigateFromUserMenu(event: MouseEvent): void {
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+  const link = event.currentTarget;
+  if (!(link instanceof HTMLAnchorElement)) return;
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  window.location.assign(link.href);
 }
 
 function installProfileStyles(): void {

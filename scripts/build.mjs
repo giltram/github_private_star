@@ -7,6 +7,7 @@ const outdir = "dist";
 async function copyStaticFiles() {
   await mkdir(outdir, { recursive: true });
   await cp("public/manifest.json", `${outdir}/manifest.json`);
+  await cp("public/icons", `${outdir}/icons`, { recursive: true });
   await cp("src/options/index.html", `${outdir}/options.html`);
   await cp("src/options/styles.css", `${outdir}/options.css`);
 }
